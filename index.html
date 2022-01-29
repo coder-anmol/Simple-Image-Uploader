@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>File Uploader</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <h1 class="text-center">File Upload Via Html Form</h1>
+      <hr />
+      <p class="text-secondary">This is a simple image uploader system!</p>
+      <hr />
+
+      <form action="/upload" enctype="multipart/form-data" method="post">
+        <div class="form-group">
+          <label for="upload-image-file"></label>
+          <input
+            type="file"
+            class="form-control-file"
+            name="upload"
+            id="upload"
+            placeholder="upload-image-file"
+          />
+          <small id="fileHelpId" class="form-text text-muted"
+            >Please select the image to be uploaded...</small
+          >
+        </div>
+
+        <button type="submit" class="btn btn-primary" value="Upload">
+          Upload
+        </button>
+      </form>
+    </div>
+
+    <div class="container">
+      <h1 class="text-center">File Uploader via Rest API using fetch()</h1>
+      <hr />
+      <p class="text-secondary">
+        This is a simple API based image uploader system!
+      </p>
+      <hr />
+
+      <div class="form-group">
+        <label for="upload-image-file"></label>
+        <input type="file" id="customFileUpload" />
+        <small id="fileHelpId" class="form-text text-muted"
+          >Please select the image to be uploaded...</small
+        >
+      </div>
+
+      <button class="btn btn-primary" id="uploadButton">Upload</button>
+
+      <div id="root"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      const fileUpload = document.querySelector("#customFileUpload");
+      const uploadButton = document.querySelector("#uploadButton");
+
+      uploadButton.addEventListener("click", function (event) {
+        const formData = new FormData();
+        // validations can be added here
+        formData.append("upload", fileUpload.files[0]);
+        fetch("/api/upload", {
+          method: "POST",
+          "content-type": "multipart/form-data",
+          body: formData,
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            console.log(res);
+            const root = document.getElementById("root");
+            const img = document.createElement("img");
+            img.alt = "testing";
+            img.src = res.fileUrl;
+            img.className = "img-fluid";
+            root.appendChild(img);
+          })
+          .catch((err) => console.log(err));
+      });
+    </script>
+  </body>
+</html>
